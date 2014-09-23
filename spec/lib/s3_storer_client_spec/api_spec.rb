@@ -24,6 +24,10 @@ describe S3StorerClient::Api do
       expect { subject.store urls }.to raise_error S3StorerClient::InvalidConfigError
     end
 
+    it "when no urls given" do
+      expect { subject.store({})}.to raise_error ArgumentError
+    end
+
     it "makes a request to the API with the given urls" do
       stub_request(:post, "https://xxx:xxx@s3-storer.herokuapp.com/store")
         .with(body: {
@@ -46,6 +50,20 @@ describe S3StorerClient::Api do
         )
 
       expect(subject.store urls).to be_ok
+    end
+
+    it "includes tagLogsWith as a header" do
+      stub_request(:post, "https://xxx:xxx@s3-storer.herokuapp.com/store")
+        .with(headers: {
+          'Tag-Logs-With' => 'my tag'
+        }
+        )
+        .to_return(
+          status: 200,
+          body: { status: 'ok'}
+        )
+
+      subject.store urls, tagLogsWith: 'my tag'
     end
 
     it "contains expected json" do
@@ -102,6 +120,8 @@ describe S3StorerClient::Api do
     end
   end
 
+
+
   describe "#delete" do
     let(:urls) do
       [
@@ -113,6 +133,10 @@ describe S3StorerClient::Api do
       expect(subject.config).to receive(:valid?).and_return false
 
       expect { subject.delete urls }.to raise_error S3StorerClient::InvalidConfigError
+    end
+
+    it "when no urls given" do
+      expect { subject.delete [] }.to raise_error ArgumentError
     end
 
     it "makes a request to the API with the given urls" do
@@ -134,6 +158,21 @@ describe S3StorerClient::Api do
         )
 
       expect(subject.delete urls).to be_ok
+    end
+
+
+    it "includes tagLogsWith as a header" do
+      stub_request(:delete, "https://xxx:xxx@s3-storer.herokuapp.com/delete")
+        .with(headers: {
+          'Tag-Logs-With' => 'my secret tag'
+        }
+        )
+        .to_return(
+          status: 200,
+          body: { status: 'ok'}
+        )
+
+      subject.delete urls, tagLogsWith: 'my secret tag'
     end
 
     it "contains expected json" do
