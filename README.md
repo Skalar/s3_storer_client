@@ -1,6 +1,44 @@
 # S3StorerClient
 
-TODO: Write a gem description
+A very thin wrapper client around [S3 Storer](https://github.com/Skalar/s3_storer)'s API
+Please see the documentation for S3 Storer's API on [their page](https://github.com/Skalar/s3_storer).
+
+## Usage
+
+```ruby
+# Set up config
+
+S3StorerClient::Api.config = S3StorerClient::Config.new(
+  api_endpoint: 'https://s3-storer.herokuapp.com',
+  basic_auth_user: "xxx",
+  basic_auth_pass: "xxx",
+  aws_access_key_id: "xxx",
+  aws_secret_access_key: "xxx",
+  s3_bucket: "xxx",
+  s3_region: "xxx"
+)
+
+# Make requests to store
+
+urls = {
+  my: 'http://www.example.com/urls'
+  urls: 'http://www.example.com/i/want/stored'
+}
+response = S3StorerClient.store urls
+response.ok?
+response.json['urls']['my'] # => returns url where example.com/i/want/stored now is coped to S3.
+
+# Delete urls
+
+urls = [
+  'http://www.s3.com/urls', 'http://www.se.com/i/want/deleted'
+]
+
+response = S3StorerClient.delete urls
+response.ok?
+
+```
+
 
 ## Installation
 
