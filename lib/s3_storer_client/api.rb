@@ -38,8 +38,8 @@ module S3StorerClient
     # Returns a hash with same keys as the one you provided, but with URLs where the
     # resources now is stored (on S3).
     def store(urls, options = {})
-      fail S3StorerClient::InvalidConfigError if config.invalid?
-      fail ArgumentError, "No URLs given" if urls.empty?
+      fail S3StorerClient::InvalidConfigError if config.nil? || config.invalid?
+      fail ArgumentError, "No URLs given" if urls.nil? || urls.empty?
 
       request = build_api_request options
       request.url = store_api_url
@@ -55,8 +55,8 @@ module S3StorerClient
     #
     # Returns boolean
     def delete(urls, options = {})
-      fail S3StorerClient::InvalidConfigError if config.invalid?
-      fail ArgumentError, "No URLs given" if urls.empty?
+      fail S3StorerClient::InvalidConfigError if config.nil? || config.invalid?
+      fail ArgumentError, "No URLs given" if urls.nil? || urls.empty?
 
       request = build_api_request options
       request.url = delete_api_url

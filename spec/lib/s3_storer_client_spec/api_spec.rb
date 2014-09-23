@@ -18,6 +18,11 @@ describe S3StorerClient::Api do
       }
     end
 
+    it "fails when config isn't set" do
+      subject.config = nil
+      expect { subject.store urls }.to raise_error S3StorerClient::InvalidConfigError
+    end
+
     it "fails when config is invalid" do
       expect(subject.config).to receive(:valid?).and_return false
 
@@ -26,6 +31,10 @@ describe S3StorerClient::Api do
 
     it "when no urls given" do
       expect { subject.store({})}.to raise_error ArgumentError
+    end
+
+    it "when urls is nil" do
+      expect { subject.store nil }.to raise_error ArgumentError
     end
 
     it "makes a request to the API with the given urls" do
@@ -122,11 +131,18 @@ describe S3StorerClient::Api do
 
 
 
+
+
   describe "#delete" do
     let(:urls) do
       [
         'http://example.com/foo', 'http://example.com/bar'
       ]
+    end
+
+    it "fails when config isn't set" do
+      subject.config = nil
+      expect { subject.delete urls }.to raise_error S3StorerClient::InvalidConfigError
     end
 
     it "fails when config is invalid" do
@@ -137,6 +153,10 @@ describe S3StorerClient::Api do
 
     it "when no urls given" do
       expect { subject.delete [] }.to raise_error ArgumentError
+    end
+
+    it "when urls is nil" do
+      expect { subject.delete nil }.to raise_error ArgumentError
     end
 
     it "makes a request to the API with the given urls" do
