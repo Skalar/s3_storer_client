@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = S3StorerClient::VERSION
   spec.authors       = ["Thorbjørn Hermansen"]
   spec.email         = ["thhermansen@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{Thin Riuby wrapper arount HTTP service s3_storer}
+  spec.description   = %q{API client for https://github.com/skalar/s3_storer}
   spec.homepage      = ""
   spec.license       = "MIT"
 
@@ -18,6 +18,12 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
+
+  spec.add_dependency "httpi", ['>= 2.1.0', '< 2.3']
+
+
   spec.add_development_dependency "bundler", "~> 1.7"
   spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "rspec", "~> 3.1.0"
+  spec.add_development_dependency "webmock", "~> 1.18.0"
 end
