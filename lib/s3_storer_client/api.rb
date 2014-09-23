@@ -55,6 +55,12 @@ module S3StorerClient
     # Returns boolean
     def delete(urls, options = {})
       fail S3StorerClient::InvalidConfigError if config.invalid?
+
+      request = build_api_request options
+      request.url = delete_api_url
+      request.body = make_api_body urls: urls
+
+      ::S3StorerClient::Response.new HTTPI.delete request
     end
 
 

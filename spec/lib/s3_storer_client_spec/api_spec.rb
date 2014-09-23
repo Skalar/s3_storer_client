@@ -94,11 +94,93 @@ describe S3StorerClient::Api do
       expect(subject.store urls).to be_error
     end
 
-    it "is not ok when server fails with 500 internal server error" do
+    it "is not ok when server fails with 422 internal server error" do
       stub_request(:post, "https://xxx:xxx@s3-storer.herokuapp.com/store")
       .to_return status: 422
 
       expect(subject.store urls).to be_error
+    end
+  end
+
+  describe "#delete" do
+    let(:urls) do
+      [
+        'http://example.com/foo', 'http://example.com/bar'
+      ]
+    end
+
+    it "fails when config is invalid" do
+      expect(subject.config).to receive(:valid?).and_return false
+
+      expect { subject.delete urls }.to raise_error S3StorerClient::InvalidConfigError
+    end
+
+    it "makes a request to the API with the given urls" do
+      stub_request(:delete, "https://xxx:xxx@s3-storer.herokuapp.com/delete")
+        .with(body: {
+            urls: urls,
+            options: {
+              awsAccessKeyId: described_class.config.aws_access_key_id,
+              awsSecretAccessKey: described_class.config.aws_secret_access_key,
+              s3Bucket: described_class.config.s3_bucket,
+              s3Region: described_class.config.s3_region
+            }
+          }
+        )
+        .to_return(
+          status: 200,
+          headers: {'Content-Type' => 'application/json'},
+          body: { status: 'ok' }.to_json
+        )
+
+      expect(subject.delete urls).to be_ok
+    end
+
+    it "contains expected json" do
+      stub_request(:delete, "https://xxx:xxx@s3-storer.herokuapp.com/delete")
+        .to_return(
+          status: 200,
+          headers: {'Content-Type' => 'application/json'},
+          body: { status: 'ok' }.to_json
+        )
+
+      expect(subject.delete(urls).json).to eq('status' => 'ok')
+    end
+
+    it "is not ok when status in response is error" do
+      stub_request(:delete, "https://xxx:xxx@s3-storer.herokuapp.com/delete")
+        .to_return(
+          status: 200,
+          headers: {'Content-Type' => 'application/json'},
+          body: { status: 'error' }.to_json
+        )
+
+      expect(subject.delete urls).to be_error
+    end
+
+    it "is not ok when status in response is timeout" do
+      stub_request(:delete, "https://xxx:xxx@s3-storer.herokuapp.com/delete")
+        .to_return(
+          status: 200,
+          headers: {'Content-Type' => 'application/json'},
+          body: { status: 'error' }.to_json
+        )
+
+      expect(subject.delete urls).to be_error
+    end
+
+    it "is not ok when server fails with 500 internal server error" do
+      stub_request(:delete, "https://xxx:xxx@s3-storer.herokuapp.com/delete")
+      .to_return status: 500
+
+      expect(subject.delete urls).to be_error
+    end
+
+    it "is not ok when server fails with 422 internal server error" do
+      stub_request(:delete, "https://xxx:xxx@s3-storer.herokuapp.com/delete")
+      .to_return status: 422
+
+      expect(subject.delete urls).to be_error
     end
   end
 end
