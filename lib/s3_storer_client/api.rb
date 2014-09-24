@@ -16,7 +16,7 @@ module S3StorerClient
       new(config).store urls, options
     end
 
-    def self.delete(urls, options)
+    def self.delete(urls, options = {})
       new(config).delete urls, options
     end
 
