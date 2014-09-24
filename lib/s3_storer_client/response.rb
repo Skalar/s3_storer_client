@@ -6,6 +6,7 @@ module S3StorerClient
 
     attr_reader :response
 
+    def_delegator :response, :inspect
     def_delegator :response, :headers
     def_delegator :response, :body
 
