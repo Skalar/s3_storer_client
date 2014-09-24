@@ -12,12 +12,12 @@ module S3StorerClient
     end
 
 
-    def self.store(urls)
-      new(config).store urls
+    def self.store(urls, options = {})
+      new(config).store urls, options
     end
 
-    def self.delete(urls)
-      new(config).delete urls
+    def self.delete(urls, options)
+      new(config).delete urls, options
     end
 
 
