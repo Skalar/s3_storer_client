@@ -4,7 +4,7 @@ require 'json'
 module S3StorerClient
   class Api
     def self.config
-      @config
+      @config.dup
     end
 
     def self.config=(config)
