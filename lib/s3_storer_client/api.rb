@@ -90,6 +90,8 @@ module S3StorerClient
         }
       }
 
+      defaults[:options][:cloudfrontHost] = @config.cloudfront_host if @config.cloudfront_host
+
       defaults.merge(hash).to_json
     end
 
