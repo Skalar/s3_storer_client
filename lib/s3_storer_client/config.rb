@@ -5,7 +5,7 @@ module S3StorerClient
       aws_access_key_id aws_secret_access_key s3_bucket s3_region
     ]
     OPTIONAL = %w[
-      cloudfront_host
+      cloudfront_host make_public
     ]
 
     attr_accessor *REQUIRED

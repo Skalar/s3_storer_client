@@ -90,6 +90,7 @@ module S3StorerClient
         }
       }
 
+      defaults[:options][:makePublic] = @config.make_public if @config.respond_to? :make_public
       defaults[:options][:cloudfrontHost] = @config.cloudfront_host if @config.cloudfront_host
 
       defaults.merge(hash).to_json

@@ -61,6 +61,35 @@ describe S3StorerClient::Api do
       expect(subject.store urls).to be_ok
     end
 
+    it "makes a request to the API with the given make public setting" do
+      stub_request(:post, "https://xxx:xxx@s3-storer.herokuapp.com/store")
+        .with(body: {
+            urls: urls,
+            options: {
+              awsAccessKeyId: described_class.config.aws_access_key_id,
+              awsSecretAccessKey: described_class.config.aws_secret_access_key,
+              s3Bucket: described_class.config.s3_bucket,
+              s3Region: described_class.config.s3_region,
+              makePublic: false
+            }
+          }
+        )
+        .to_return(
+          status: 200,
+          headers: {'Content-Type' => 'application/json'},
+          body: {
+            status: 'ok',
+            urls: response_urls
+          }.to_json
+        )
+
+      config = described_class.config
+      config.make_public = false
+      subject = described_class.new config
+
+      expect(subject.store urls).to be_ok
+    end
+
     it "makes a request to the API with the given cloud front" do
       stub_request(:post, "https://xxx:xxx@s3-storer.herokuapp.com/store")
         .with(body: {
